@@ -1,7 +1,6 @@
-#X-Ray pneumonia detection
+# X-Ray pneumonia detection
 
-[TOC]
-##Used libraries
+## Used libraries
 #### Libraries
 
 - falcon
