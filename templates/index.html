@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get image</title>
+    <script src="http://127.0.0.1:8000/jquery"></script>
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+
+
+    <script>
+        function SavePhoto() {
+            var request = new XMLHttpRequest();
+            request.open('POST', "/images");
+            request.send($('#file')[0].files[0]);
+        }
+        function ChangeFile(input){
+            $('.file-custom').attr('content',$('#file')[0].files[0].name)
+        }
+        function GetData(){
+            $.get( "/images", function( data ) {
+                if (data['prediction'] == 1) {
+                    res = "Trash";
+                    cl = 'orange'
+                }
+                else if (data['prediction'] == 0) {
+                    res = "Healthy";
+                    cl = 'green';
+                }
+                else if (data['prediction'] == 2) {
+                    res = "Pneumonia";
+                    cl = 'red';
+                }
+                else{
+                    res = "ERROR";
+                    cl = 'red';
+                }
+            $( "#res" ).html( "<div id='result' class = '"+ cl +"'>"+ res +"</div><img src=" +data['path'] +" width = '50%' id = 'res_img'>" );
+            console.log(data)
+            });
+        }
+    </script>
+</head>
+<body>
+        <ul id="menu">
+                <li class="menu-item"><a href="/">Home</a></li>
+                <li class="menu-item active"><a href="/test">Pneumonia test</a></li>
+                <li class="menu-item"><a href="/train">Train model</a></li>
+        
+            </ul>
+<div id="main">
+    <div id="img_send">
+            <label class="file">
+                    <input type="file" id="file" onchange="ChangeFile(this)" aria-label="File browser example">
+                    <span class="file-custom"></span>
+                  </label>
+            <input id="predict" type="button" onclick="SavePhoto();GetData()" value="Diagnosis">
+</div>
+<div id = "res">
+<div id="result"></div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Train model</title>
+    <script src="http://127.0.0.1:8000/jquery"></script>
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <link rel="stylesheet" type="text/css" href="css/train.css">
+
+
+    <script>
+        function Train() {
+            var request = new XMLHttpRequest();
+            request.open('POST', "/train/res");
+            request.send($("#input").val());
+        }
+        
+        function GetData(){
+            $.get( "/train/res", function( data ) {
+            $( "#res" ).html( "<div id='result' > Accurancy: "+ data['accurancy'] +"</div>" );
+            console.log(data['accurancy'])
+            });
+        }
+    </script>
+</head>
+<body>
+        <ul id="menu">
+                <li class="menu-item"><a href="/">Home</a></li>
+                <li class="menu-item"><a href="/test">Pneumonia test</a></li>
+                <li class="menu-item active"><a href="/train">Train model</a></li>
+        
+            </ul>
+<div id="main">
+    <div id="img_send">
+        <label id = "label"for="input">Epochs</label>
+            <input id = "input" name="input" type="text" width="250px">
+            <input id="predict" type="button" onclick="Train(); GetData()" value="Train">
+</div>
+<div id = "res">
+<div id="result"></div>
+</div>
+</div>
+</body>
+</html>

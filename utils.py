@@ -3,8 +3,6 @@ from keras.models import load_model
 from keras.preprocessing import image
 import numpy as np
 import os
-import uuid
-import mimetypes
 import falcon
 from TrainModel import *
 
