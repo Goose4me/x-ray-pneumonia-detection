@@ -7,7 +7,7 @@ from CssConection import *
 
 app = falcon.API()
 res = Resource(app)
-app.add_route('/', Main())
+# app.add_route('/', Main())
 app.add_route('/train', TrainPage())
 app.add_route("/jquery", JQUERY())
 app.add_route("/test", Img())

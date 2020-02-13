@@ -72,11 +72,11 @@ class JQUERY():
         res.status = falcon.HTTP_200
         res.stream = open("resources/jquery-3.2.1.min.js", "rb")
 
-class Main():
-    def on_get(self,req,res):
-        res.content_type = "text/html"
-        res.status = falcon.HTTP_200
-        res.stream = open("templates/main.html", "rb")
+# class Main():
+#     def on_get(self,req,res):
+#         res.content_type = "text/html"
+#         res.status = falcon.HTTP_200
+#         res.stream = open("templates/main.html", "rb")
 
 
 class TrainPage():
