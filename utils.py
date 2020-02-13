@@ -3,6 +3,8 @@ from keras.models import load_model
 from keras.preprocessing import image
 import numpy as np
 import os
+import uuid
+import mimetypes
 import falcon
 from TrainModel import *
 
@@ -16,7 +18,6 @@ class Train():
 
 
     def on_post(self, req, resp):
-        epochs = 0
         epochs = req.bounded_stream.read(req.content_length)
         print(req.bounded_stream.read(req.content_length))
         self.accurancy = train(int(epochs))
@@ -26,7 +27,6 @@ class Train():
 
 
 class Resource(object):
-    _CHUNK_SIZE_BYTES = 4096
     image_path = "/img"
     prediction = -1
     def __init__(self, app):
@@ -36,8 +36,6 @@ class Resource(object):
             self.prediction = make_prediction(self.image_path)
         else:
             self.prediction = "No photo"
-        # resp.data = msgpack.packb(doc, use_bin_type=True)
-        #         # resp.content_type = falcon.MEDIA_MSGPACK
         resp.status = falcon.HTTP_200
         resp.body = json.dumps({"prediction":str(self.prediction), "path":self.image_path})
 

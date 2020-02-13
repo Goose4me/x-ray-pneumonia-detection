@@ -10,6 +10,20 @@ from keras.models import load_model
 import os
 import pdb
 
+def make_model():
+    model = Sequential() 
+    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(28, 28, 1))) 
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))  
+    model.add(Dropout(0.25))  
+    model.add(Flatten())  
+    model.add(Dense(128, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(3, activation='softmax'))
+    model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
+    model.load_weights("with_other.h5")
+    return model
+
 def train(epochs):
     train_datagen = ImageDataGenerator(
         rotation_range=40,
@@ -51,67 +65,20 @@ def train(epochs):
         color_mode="grayscale"
 
     )
-    model = Sequential() 
-    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(28, 28, 1))) 
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))  
-    model.add(Dropout(0.25))  
-    model.add(Flatten())  
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(3, activation='softmax'))
-    model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
-    model.load_weights("with_other.h5")
+    model = make_model()
     history = model.fit_generator(train_generator, epochs=epochs, validation_data=validation_generator, verbose=1)
     model.save_weights("with_other.h5")
     print(model.summary())
     return  history.history
 
 def make_prediction(filepath):
-    model = Sequential()
-    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(28, 28, 1)))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
-    model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(3, activation='sigmoid'))
-    model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
-    model.load_weights("with_other.h5")
+    model = make_model()
     img = image.load_img(filepath, target_size=(28, 28, 1), color_mode="grayscale")
     img = image.img_to_array(img)
     img /= 255
     prediction = model.predict_classes(np.array([img]))
     return prediction[0]
 
-def results():
-    test_img = []
-    test_dir = []
-    t_d = os.listdir(os.path.join("test", "pneumonia"))
-    _sum=0
-    for i in t_d:
-        if make_prediction(os.path.join("test", "pneumonia", i))==2:
-            _sum+=1
-    print(_sum/len(t_d))
-    t_d = os.listdir(os.path.join("test", "other"))
-    _sum=0
-    for i in t_d:
-        if make_prediction(os.path.join("test", "other", i))==1:
-            _sum+=1
-    print(_sum/len(t_d))
-    t_d = os.listdir(os.path.join("test", "normal"))
-    _sum=0
-    for i in t_d:
-        if make_prediction(os.path.join("test", "normal", i))==0:
-            _sum+=1
-    print(_sum/len(t_d))
-
-if __name__ == "__main__":
-    print(train(5))
-    print(make_prediction(os.path.join("train", "other", "264413683_190662.jpg")),
-          make_prediction(os.path.join("train", "normal", "IM-0115-0001.jpeg")),
-          make_prediction(os.path.join("train", "pneumonia", "person1164_virus_1958.jpeg")))
    
 
 
