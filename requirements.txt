@@ -41,7 +41,7 @@ pyOpenSSL==17.5.0
 pyserial==3.4
 python-libtorrent==1.1.5
 pyxdg==0.25
-PyYAML==5.3
+PyYAML==5.4
 scipy==1.2.3
 SecretStorage==2.3.1
 service-identity==16.0.0
